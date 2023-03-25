@@ -1,0 +1,23 @@
+#!/bin/sh
+#
+# ~/.xinitrc
+#
+# Executed by startx (run your window manager from here)
+
+# Qingy does not source profile...
+[ -f /etc/profile ] && . /etc/profile
+
+if [ -d /etc/X11/xinit/xinitrc.d ]; then
+  for f in /etc/X11/xinit/xinitrc.d/*; do
+    [ -x "$f" ] && . "$f"
+  done
+  unset f
+fi
+
+# exec gnome-session
+# exec startkde
+# exec startxfce4
+
+# ...or the Window Manager of your choice
+#exec ck-launch-session dbus-launch --exit-with-session startxfce4
+exec ck-launch-session ssh-agent dbus-launch --exit-with-session i3 --force-xinerama 
