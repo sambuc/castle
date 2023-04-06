@@ -1,10 +1,19 @@
-Q	:= @
-ECHO	:= @echo
-LN	:= ln -sf
-MKDIR	:= ${Q}mkdir -p
-MV	:= ${Q}mv
+# Override on the command line, for example
+#   make Q=""
+# would print on the console all the commands being run, instead of just their outputs
+Q		:= @
 
-OMYZSH_GET	:= curl -L https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh
+# The role of echo is to print, so never print the command itsef
+ECHO		:= @echo
+LN		:= ${Q}ln -sf
+MKDIR		:= ${Q}mkdir -p
+MV		:= ${Q}mv
+
+# Make sure that all files moved during this invokation of make get the same
+# timestamp.
+TS		:= $(shell date -Iseconds)
+
+OMYZSH_URL	:= https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh
 VUNDLE_URL	:= https://github.com/gmarik/vundle.git
 
 .PHONY: help
@@ -36,10 +45,10 @@ bash: profile bashrc bash_aliases bash_logout
 zsh: profile zprofile zshrc oh-my-zsh/themes/lsambuc.zsh-theme
 oh-my-zsh/themes/lsambuc.zsh-theme: oh-my-zsh/themes/dir
 
-.PHONY: omz omz-setup
+.PHONY: omz
 omz:
-	${MV} $@ $@-$(shell date -Iseconds)
-	$(Q) $(OMYZSH_GET) | sh
+	${MV} "$@" "$@-${TS}"
+	${Q} ${CURL} "${OMYZSH_URL}" | sh
 
 .PHONY: vim vim/bundle/dir vimrc vim/filetype.vim vim/syntax
 vim: ~/.vim/bundle/vundle
@@ -49,8 +58,8 @@ vim: ~/.vim/bundle/vundle
 	${ECHO} Do not forget to install and set a Nerdfont enhanced font.
 
 ~/.vim/bundle/vundle: vim/bundle/dir vimrc vim/filetype.vim vim/syntax
-	${MV} $@ $@-$(shell date -Iseconds)
-	git clone ${VUNDLE_URL} $@
+	${MV} "$@" "$@-${TS}"
+	git clone "${VUNDLE_URL}" "$@"
 
 vim/filetype.vim vim/syntax: vim/dir
 
@@ -66,10 +75,10 @@ config/i3 config/i3status.conf: config/dir
 x11: Xdefaults xinitrc xsession
 
 %/dir:
-	${MKDIR} ~/.$(shell dirname $@)
+	${MKDIR} "~/.$(shell dirname $@)"
 
 %:
 	@# Prevent generating link within links to folders
-	${MV} ~/.$@ ~/.$@-$(shell date -Iseconds)
-	${LN} $(shell pwd)/_$@ ~/.$@
+	${MV} "~/.$@" "~/.$@-${TS}"
+	${LN} "$(shell pwd)/_$@" "~/.$@"
 

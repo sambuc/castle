@@ -109,7 +109,7 @@ unsetopt correct_all
 export VISUAL=vi
 export EDITOR=vi
 
-# Alias definitions.
-if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
+# Alias definitions
+if [ -f "${HOME}/.bash_aliases" ]; then
+    . "${HOME}/.bash_aliases"
 fi

@@ -80,9 +80,9 @@ if [ -x /bin/dircolors ]; then
     alias ls='ls --color=auto'
 fi
 
-# Alias definitions.
-if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
+# Alias definitions
+if [ -f "${HOME}/.bash_aliases" ]; then
+    . "${HOME}/.bash_aliases"
 fi
 
 #colorize stderr
@@ -90,28 +90,28 @@ function swapandcolorize()
 {
 #    "$@" 3>&2 2>&1 1>&3 | while read line
 #    do
-#	echo -e "\e[91m$line\e[0m"
+#        echo -e "\e[91m$line\e[0m"
 #    done
-    "$@" 3>&2 2>&1 1>&3 | perl -e 'while(<>) 
-	{
-		chomp;
-    #Print in LYELLOW and blue background xenomai stuff warning and such
-                if (m/^xenomai.+:\d+:(\d+:)?\s+warning.*/) 
-                {print "\033[1;45m".$_."\033[m\n"; next;}
+    "$@" 3>&2 2>&1 1>&3 | perl -e 'while(<>)
+    {
+        chomp;
+        #Print in LYELLOW and blue background xenomai stuff warning and such
+        if (m/^xenomai.+:\d+:(\d+:)?\s+warning.*/)
+        {print "\033[1;45m".$_."\033[m\n"; next;}
 
-	#Print in DARKBLUE forced warnings
-		if (m/.*\#warning.*/)
-		{print "\033[1;34m".$_."\033[m\n"; next;}
-	#Print in LYELLOW warning and such
-		if (m/.+:\d+:(\d+:)?\s+warning.*/) 
-		{print "\033[1;33m".$_."\033[m\n"; next;}
-	#print in LRED errors
-		if (m/.+:\d+:(\d+:)?\s+error.*/ ||
-		    m/.+:\d+:(\d+:)? undefined reference to `/) 
-		{print "\033[1;31m".$_."\033[m\n"; next;}
-	#Print in default colors
-		{print "\033[m".$_."\n"; next;}
-	};'
-	return ${PIPESTATUS[0]}
+        #Print in DARKBLUE forced warnings
+        if (m/.*\#warning.*/)
+        {print "\033[1;34m".$_."\033[m\n"; next;}
+        #Print in LYELLOW warning and such
+        if (m/.+:\d+:(\d+:)?\s+warning.*/)
+        {print "\033[1;33m".$_."\033[m\n"; next;}
+        #print in LRED errors
+        if (m/.+:\d+:(\d+:)?\s+error.*/ ||
+            m/.+:\d+:(\d+:)? undefined reference to `/)
+        {print "\033[1;31m".$_."\033[m\n"; next;}
+        #Print in default colors
+        {print "\033[m".$_."\n"; next;}
+    };'
+    return ${PIPESTATUS[0]}
 }
 export -f swapandcolorize

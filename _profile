@@ -9,26 +9,25 @@
 #umask 022
 
 # When running bash
-if [ -n "$BASH_VERSION" ]; then
+if [ -n "${BASH_VERSION}" ]; then
     # include .bashrc if it exists
-    if [ -f "$HOME/.bashrc" ]; then
-        . "$HOME/.bashrc"
+    if [ -f "${HOME}/.bashrc" ]; then
+        . "${HOME}/.bashrc"
     fi
 fi
 
-
 # Add brew
-if [ -x /opt/homebrew/bin/brew ]; then
+if [ -x "/opt/homebrew/bin/brew" ]; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
 # Add ~/bin
-if [ -e "$HOME/bin" ]; then
-    PATH="$HOME/bin:$PATH"
+if [ -e "${HOME}/bin" ]; then
+    PATH="${HOME}/bin:${PATH}"
 fi
 
 # Add cargo
-if [ -e "$HOME/.cargo/bin" ]; then
-    PATH="$HOME/.cargo/bin:$PATH"
+if [ -e "${HOME}/.cargo/bin" ]; then
+    PATH="${HOME}/.cargo/bin:${PATH}"
 fi
 
