@@ -80,9 +80,19 @@ if [ -x /bin/dircolors ]; then
     alias ls='ls --color=auto'
 fi
 
+# Host-specific definitions
+if [ -f "${HOME}/.host.bashrc" ]; then
+    . "${HOME}/.host.bashrc"
+fi
+
 # Alias definitions
 if [ -f "${HOME}/.bash_aliases" ]; then
     . "${HOME}/.bash_aliases"
+fi
+
+# Host-specific alias definitions
+if [ -f "${HOME}/.host.aliases" ]; then
+    . "${HOME}/.host.aliases"
 fi
 
 #colorize stderr
@@ -115,3 +125,4 @@ function swapandcolorize()
     return ${PIPESTATUS[0]}
 }
 export -f swapandcolorize
+

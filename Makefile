@@ -16,7 +16,37 @@ TS		:= $(shell date -Iseconds)
 OMYZSH_URL	:= https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh
 VUNDLE_URL	:= https://github.com/gmarik/vundle.git
 
-.PHONY: help
+
+# Some things have to be done in varying ways depending on the OS
+ARCH		:= $(shell uname -s)
+
+# For GNU/Linux
+ifeq (${ARCH},Linux)
+ARCH_DEFINED	:= ok
+HOSTNAME	:= $(shell hostname)
+endif
+
+# For MacOS X
+ifeq (${ARCH},Darwin)
+ARCH_DEFINED	:= ok
+HOSTNAME	:= $(shell hostname -s)
+endif
+
+# For Windows
+ifeq ($(word 2,$(subst -, ,$(subst _, ,${ARCH}))),NT)
+ARCH_DEFINED	:= ok
+HOSTNAME	:= $(shell hostname)
+endif
+
+ifneq (${ARCH_DEFINED},ok)
+$(info )
+$(info :: ERROR: Please add the necessary support or use one of:)
+$(info ::        Linux, Mac OS X (Darwin), Windows.)
+$(info )
+$(error Unsupported architecture: $(ARCH))
+else
+
+.PHONY:
 help:
 	${ECHO} "help:\tShow this help"
 	${ECHO} "all:\tSetup all the dot files in one go"
@@ -31,54 +61,59 @@ help:
 	${ECHO} "i3:\tInstall i3wm configuration files"
 	${ECHO}
 
-.PHONY: all
+.PHONY:
 all: bash zsh git vim x11 i3
 
-.PHONY: git config/git
-git: config/git
-config/git: config/dir
+.PHONY:
+git: .config/git
+.config/git: .config/dir
 
-.PHONY: bash profile bashrc bash_aliases bash_logout
-bash: profile bashrc bash_aliases bash_logout
+.PHONY:
+sh: .profile
 
-.PHONY: zsh oh-my-zsh/themes/lsambuc.zsh-theme
-zsh: profile zprofile zshrc oh-my-zsh/themes/lsambuc.zsh-theme
-oh-my-zsh/themes/lsambuc.zsh-theme: oh-my-zsh/themes/dir
+.PHONY:
+bash: .profile .bashrc .bash_aliases .bash_logout
 
-.PHONY: omz
+.PHONY:
+zsh: .profile .zprofile .zshrc .oh-my-zsh/themes/lsambuc.zsh-theme
+.oh-my-zsh/themes/lsambuc.zsh-theme: .oh-my-zsh/themes/dir
+
+.PHONY:
 omz:
 	${MV} "$@" "$@-${TS}"
 	${Q} ${CURL} "${OMYZSH_URL}" | sh
 
-.PHONY: vim vim/bundle/dir vimrc vim/filetype.vim vim/syntax
+.PHONY:
 vim: ~/.vim/bundle/vundle
 	${ECHO}
 	vim +BundleInstall +qall
 	${ECHO}
 	${ECHO} Do not forget to install and set a Nerdfont enhanced font.
 
-~/.vim/bundle/vundle: vim/bundle/dir vimrc vim/filetype.vim vim/syntax
+~/.vim/bundle/vundle: .vim/bundle/dir .vimrc .vim/filetype.vim .vim/syntax
 	${MV} "$@" "$@-${TS}"
 	git clone "${VUNDLE_URL}" "$@"
 
-vim/filetype.vim vim/syntax: vim/dir
+.vim/filetype.vim .vim/syntax: .vim/dir
 
-.PHONY: tmux config/tmux config/dir
-tmux: config/tmux
-config/tmux: config/dir
+.PHONY:
+tmux: .config/tmux
+.config/tmux: .config/dir
 
-.PHONY: i3 config/i3 config/i3status.conf
-i3: config/i3 config/i3status.conf
-config/i3 config/i3status.conf: config/dir
+.PHONY:
+i3: .config/i3 .config/i3status.conf
+.config/i3 .config/i3status.conf: .config/dir
 
-.PHONY: x11 Xdefaults xinitrc xsession
-x11: Xdefaults xinitrc xsession
+.PHONY:
+x11: .Xdefaults .xinitrc .xsession
 
 %/dir:
-	${MKDIR} "~/.$(shell dirname $@)"
+	${MKDIR} "~/$(shell dirname $@)"
 
-%:
+.%:
 	@# Prevent generating link within links to folders
-	${MV} "~/.$@" "~/.$@-${TS}"
-	${LN} "$(shell pwd)/_$@" "~/.$@"
+	@[ -e ~/.$* ] && mv ~/.$* ~/.$*-${TS} || true
+	${LN} $(shell pwd)/_$* ~/.$*
+	@[ -e ${HOSTNAME}.$* ] && ( [ -e ~/.host.$* ] && mv ~/.host.$* ~/.host.$*-${TS};  ln -s $(shell pwd)/${HOSTNAME}.$* ~/.host.$* ) || true
 
+endif
