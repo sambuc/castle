@@ -13,9 +13,8 @@ MV		:= ${Q}mv
 # timestamp.
 TS		:= $(shell date -Iseconds)
 
-OMYZSH_URL	:= https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh
+OHMYZSH_URL	:= https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
 VUNDLE_URL	:= https://github.com/gmarik/vundle.git
-
 
 # Some things have to be done in varying ways depending on the OS
 ARCH		:= $(shell uname -s)
@@ -62,58 +61,67 @@ help:
 	${ECHO}
 
 .PHONY:
-all: bash zsh git vim x11 i3
+all: sh bash zsh git vim x11 i3
+	@# Prevent running the pattern rule
 
 .PHONY:
-git: .config/git
-.config/git: .config/dir
+git: config/git
+	@# Prevent running the pattern rule
+config/git: config/dir
 
 .PHONY:
-sh: .profile
+sh: profile
+	@# Prevent running the pattern rule
 
 .PHONY:
-bash: .profile .bashrc .bash_aliases .bash_logout
+bash: profile bashrc bash_aliases bash_logout
+	@# Prevent running the pattern rule
 
 .PHONY:
-zsh: .profile .zprofile .zshrc .oh-my-zsh/themes/lsambuc.zsh-theme
-.oh-my-zsh/themes/lsambuc.zsh-theme: .oh-my-zsh/themes/dir
+zsh: profile zprofile zshrc oh-my-zsh/themes/lsambuc.zsh-theme
+	@# Prevent running the pattern rule
+oh-my-zsh/themes/lsambuc.zsh-theme: oh-my-zsh/themes/dir
 
 .PHONY:
 omz:
-	${MV} "$@" "$@-${TS}"
-	${Q} ${CURL} "${OMYZSH_URL}" | sh
+	${MV} "${HOME}/.oh-my-zsh" "${HOME}/.oh-my-zsh-${TS}" || true
+	@curl -fsSL ${OHMYZSH_URL} > omz-setup.sh
+	@sh omz-setup.sh --unattended
 
 .PHONY:
-vim: ~/.vim/bundle/vundle
+vim: vim/bundle/vundle
 	${ECHO}
 	vim +BundleInstall +qall
 	${ECHO}
 	${ECHO} Do not forget to install and set a Nerdfont enhanced font.
 
-~/.vim/bundle/vundle: .vim/bundle/dir .vimrc .vim/filetype.vim .vim/syntax
-	${MV} "$@" "$@-${TS}"
-	git clone "${VUNDLE_URL}" "$@"
+vim/bundle/vundle: vim/bundle/dir vimrc vim/filetype.vim vim/syntax
+	${MV} "${HOME}/.$@" "${HOME}/.$@-${TS}" || true
+	git clone "${VUNDLE_URL}" "${HOME}/.$@"
 
-.vim/filetype.vim .vim/syntax: .vim/dir
-
-.PHONY:
-tmux: .config/tmux
-.config/tmux: .config/dir
+vim/filetype.vim vim/syntax: .vim/dir
 
 .PHONY:
-i3: .config/i3 .config/i3status.conf
-.config/i3 .config/i3status.conf: .config/dir
+tmux: config/tmux
+	@# Prevent running the pattern rule
+config/tmux: config/dir
 
 .PHONY:
-x11: .Xdefaults .xinitrc .xsession
+i3: config/i3 config/i3status.conf
+	@# Prevent running the pattern rule
+config/i3 config/i3status.conf: config/dir
+
+.PHONY:
+x11: Xdefaults xinitrc xsession
+	@# Prevent running the pattern rule
 
 %/dir:
-	${MKDIR} "~/$(shell dirname $@)"
+	${MKDIR} "${HOME}/.$(shell dirname $@)"
 
-.%:
+%:
 	@# Prevent generating link within links to folders
-	@[ -e ~/.$* ] && mv ~/.$* ~/.$*-${TS} || true
-	${LN} $(shell pwd)/_$* ~/.$*
-	@[ -e ${HOSTNAME}.$* ] && ( [ -e ~/.host.$* ] && mv ~/.host.$* ~/.host.$*-${TS};  ln -s $(shell pwd)/${HOSTNAME}.$* ~/.host.$* ) || true
+	${Q}[ -e ${HOME}/.$* ] && mv ${HOME}/.$* ${HOME}/.$*-${TS} || true
+	${LN} $(shell pwd)/_$* ${HOME}/.$*
+	${Q}[ -e ${HOSTNAME}.$* ] && ( [ -e ${HOME}/.host.$* ] && mv ${HOME}/.host.$* ${HOME}/.host.$*-${TS}; ln -s $(shell pwd)/${HOSTNAME}.$* ${HOME}/.host.$* ) || true
 
 endif
