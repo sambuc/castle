@@ -12,10 +12,11 @@ XTerm*bellIsUrgent:	true
 Rxvt*urgentOnBell:	true
 Rxvt*background:	black
 Rxvt*foreground:	grey
-Rxvt*transparent:	true
+#Rxvt*transparent:	true
 Rxvt*shading:		25
-Rxvt*font:		xft:Droid Sans Mono for Powerline:12
-URxvt*scrollBar:	false
+!Font name should be in lower case!
+Rxvt*font:		xft:jetbrainsmono nerd font mono:size=14
+Rxvt*scrollBar:		false
 
 XTerm*background:	black
 XTerm*foreground:	grey
