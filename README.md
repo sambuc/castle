@@ -10,7 +10,7 @@ The configuration relies on Vundle and expects a Nerd Font.
 
 ### ZSH
 
-The configuration relies on [Ho My Zsh](https://ohmyz.sh).
+The configuration relies on [Oh My Zsh](https://ohmyz.sh).
 
 The target to install it is **not** automatically triggered at this time, even with `make all`.
 
