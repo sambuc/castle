@@ -1,11 +1,12 @@
 !Clickable links:
 URxvt.perl-ext-common:	default,matcher
-URxvt.url-launcher:	/usr/bin/epiphany
+URxvt.url-launcher:	/usr/bin/firefox
 URxvt.colorUL:		#4682B4
 URxvt.matcher.button:	1
 
-!For use in ssh connexion to minix hosts
+!For use in ssh connexion to remote hosts
 URxvt*termName:		rxvt-256color
+
 !Urgent hint so that I get red borders in i3
 XTerm*bellIsUrgent:	true
 
@@ -21,7 +22,7 @@ Rxvt*scrollBar:		false
 XTerm*background:	black
 XTerm*foreground:	grey
 XTerm*renderFont:	true
-XTerm*faceName:		xft:Droid Sans Mono for Powerline:12
+XTerm*faceName:		xft:jetbrainsmono nerd font mono:size=14
 XTerm*scrollBar:	false
 
 !black

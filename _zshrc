@@ -11,7 +11,7 @@ export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="robbyrussell"
 ZSH_THEME="clean" #all info, nice color, time on the right 
 ZSH_THEME="gnzh" # two liner, nice arrow
-ZSH_THEME="lsambuc" # one liner, fixed path, time, hostname
+ZSH_THEME="sambuc" # one liner, fixed path, time, hostname
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load

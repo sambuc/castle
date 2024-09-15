@@ -78,9 +78,9 @@ bash: profile bashrc bash_aliases bash_logout
 	@# Prevent running the pattern rule
 
 .PHONY:
-zsh: profile zprofile zshrc oh-my-zsh/themes/lsambuc.zsh-theme
+zsh: profile zprofile zshrc oh-my-zsh/themes/sambuc.zsh-theme
 	@# Prevent running the pattern rule
-oh-my-zsh/themes/lsambuc.zsh-theme: oh-my-zsh/themes/dir
+oh-my-zsh/themes/sambuc.zsh-theme: oh-my-zsh/themes/dir
 
 .PHONY:
 omz:
