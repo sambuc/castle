@@ -91,8 +91,8 @@ if [ -f "${HOME}/.bash_aliases" ]; then
 fi
 
 # Host-specific alias definitions
-if [ -f "${HOME}/.host.aliases" ]; then
-    . "${HOME}/.host.aliases"
+if [ -f "${HOME}/.host.bash_aliases" ]; then
+    . "${HOME}/.host.bash_aliases"
 fi
 
 #colorize stderr
