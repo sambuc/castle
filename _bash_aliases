@@ -16,20 +16,31 @@ alias grep='grep --color=auto'
 
 alias weather='curl -H "Accept-Language: en" http://wttr.in/Lausanne'
 
-function dias() {
-	n=$1
-	shift
-	ssh diascld$n.iccluster.epfl.ch -A -Y $@
+function _ssh_wrap() {
+	if [ ! $# -gt 1 ]
+	then
+		echo "Usage: ${0} remote_host [ssh arguments] command"
+		return
+	fi
+	local n="${1}"; shift
+	ssh ${n} -A -Y "$@"
 }
 
-function diasrange() {
-	start=$1
-	end=$2
-	shift; shift;
+function ssh_range() {
+	if [ ! $# -gt 3 ]
+	then
+		echo "Usage: ${0} remote_prefix start end [ssh arguments] command"
+		return
+	fi
+	local prefix="${1}"; shift
+	local start="${1}"; shift
+	local end="${1}"; shift
+
 	for d in $(seq ${start} ${end})
 	do
-		echo diascld$d
-		dias $d -x "$@"
-		echo ------------------------------------------------------------------------------
+		local remote="${prefix}${d}"
+		echo "${remote}"
+		_ssh_wrap "${remote}" -x "$@"
+		echo "------------------------------------------------------------------------------"
 	done
 }
