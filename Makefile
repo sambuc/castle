@@ -11,7 +11,7 @@ MV		:= ${Q}mv
 
 # Make sure that all files moved during this invokation of make get the same
 # timestamp.
-TS		:= $(shell date -Iseconds)
+TS		:= $(shell date +%Y-%m-%d-T%H:%M:%S%z)
 
 OHMYZSH_URL	:= https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
 VUNDLE_URL	:= https://github.com/gmarik/vundle.git
