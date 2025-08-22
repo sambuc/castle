@@ -48,6 +48,7 @@ Temporary Items
 
 # App specific configurations
 .obsidian
+.idea
 
 # Hidden files
 #.??* # Remove this comment in a project
